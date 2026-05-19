@@ -299,8 +299,8 @@
             .then(response => response.json()) // Parsing respon teks mentah menjadi Objek JSON
             .then(result => {
                 if (result.status === "success") {
-                    // Berhasil: Tampilkan Username berupa Email dan password acak 5 digit yang dibuat server backend
-                    alert(`Pendaftaran Berhasil Dikirim!\n\nBerikut Akun Login Ujian Anda:\n• Username : ${dataObj.email}\n• Password : (Silakan periksa lembar baris baru di database Google Sheets Anda)\n\nHarap simpan data kredensial login tersebut.`);
+                    // Berhasil: Tampilkan pesan sukses dan instruksi cek email
+                    alert("Pendaftaran Berhasil!\n\nPenting!, Silahkan Cek Email untuk mendapatkan informasi login panel");
                     form.reset();
                 } else {
                     alert("Gagal memproses data pendaftaran: " + (result.message || "Unknown error"));
