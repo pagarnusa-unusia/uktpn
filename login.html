@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Peserta - PAC PSNU PAGARNUSA Kecamatan Kemang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://lh3.googleusercontent.com/d/1drM76LlU3sdqpwo-Urq7ZULoyORC0UMQ">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#056839',
+                            dark: '#044d2b',
+                            light: '#0b8f4d',
+                            white: '#ffffff',
+                            bgLight: '#f5f5f5',
+                            textGray: '#555555'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'btn': '10px',
+                        'card': '16px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            color: #555555;
+        }
+        .smooth-transition {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between">
+
+    <nav class="sticky top-0 z-50 bg-white border-b-2 border-brand shadow-sm smooth-transition">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center space-x-3">
+                    <img src="https://lh3.googleusercontent.com/d/1drM76LlU3sdqpwo-Urq7ZULoyORC0UMQ" alt="Logo Pagar Nusa" class="w-12 h-12 object-contain">
+                    <div class="text-brand-dark tracking-tight leading-tight">
+                        <span class="block text-sm font-extrabold uppercase">PAC PSNU PAGARNUSA</span>
+                        <span class="block text-xs font-semibold text-brand">Kecamatan Kemang</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <a href="index.html" class="text-brand-textGray hover:text-brand smooth-transition">Home</a>
+                    <a href="#" class="text-brand-textGray hover:text-brand smooth-transition">Profil</a>
+                    <a href="#" class="text-brand-textGray hover:text-brand smooth-transition">Kepengurusan</a>
+                    <a href="#" class="text-brand-textGray hover:text-brand smooth-transition">Berita</a>
+                    <a href="daftar_peserta.html" class="text-brand-textGray hover:text-brand smooth-transition">Pendaftaran</a>
+                    <a href="#" class="text-brand-textGray hover:text-brand smooth-transition">Kontak</a>
+                </div>
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-btn" class="text-brand focus:outline-none text-2xl">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-4 space-y-2 shadow-inner">
+            <a href="index.html" class="block py-2 px-3 text-brand-textGray hover:bg-brand/10 hover:text-brand rounded-lg smooth-transition">Home</a>
+            <a href="#" class="block py-2 px-3 text-brand-textGray hover:bg-brand/10 hover:text-brand rounded-lg smooth-transition">Profil</a>
+            <a href="#" class="block py-2 px-3 text-brand-textGray hover:bg-brand/10 hover:text-brand rounded-lg smooth-transition">Kepengurusan</a>
+            <a href="#" class="block py-2 px-3 text-brand-textGray hover:bg-brand/10 hover:text-brand rounded-lg smooth-transition">Berita</a>
+            <a href="daftar_peserta.html" class="block py-2 px-3 text-brand-textGray hover:bg-brand/10 hover:text-brand rounded-lg smooth-transition">Pendaftaran</a>
+            <a href="#" class="block py-2 px-3 text-brand-textGray hover:bg-brand/10 hover:text-brand rounded-lg smooth-transition">Kontak</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full mx-auto">
+            
+            <div class="text-center mb-8">
+                <img src="https://lh3.googleusercontent.com/d/1drM76LlU3sdqpwo-Urq7ZULoyORC0UMQ" alt="Logo Pagar Nusa" class="w-24 h-24 mx-auto object-contain mb-4">
+                <h1 class="text-2xl font-bold text-brand-dark mb-1">Login Panel Peserta</h1>
+                <p class="text-sm text-brand-textGray">Gunakan Email (Kolom C) dan Password (Kolom D) yang tertera di spreadsheet pendaftaran Anda.</p>
+                <div class="w-16 h-1 bg-brand mx-auto mt-3 rounded-full"></div>
+            </div>
+
+            <div class="bg-white rounded-card shadow-md p-6 sm:p-8 border border-gray-100">
+                <form id="loginForm" class="space-y-5">
+                    
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-brand-dark mb-2">Alamat Email <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-envelope text-sm"></i>
+                            </span>
+                            <input type="email" id="email" name="email" required placeholder="contoh@gmail.com"
+                                class="w-full pl-10 pr-4 py-3 bg-brand-bgLight/50 border border-gray-200 rounded-btn focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 smooth-transition text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-brand-dark mb-2">Password <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-lock text-sm"></i>
+                            </span>
+                            <input type="password" id="password" name="password" required placeholder="Masukkan password Anda"
+                                class="w-full pl-10 pr-10 py-3 bg-brand-bgLight/50 border border-gray-200 rounded-btn focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 smooth-transition text-sm">
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer text-gray-400 hover:text-brand" id="togglePassword">
+                                <i class="fa-solid fa-eye text-sm" id="eyeIcon"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="loginBtn"
+                        class="w-full bg-brand hover:bg-brand-dark text-white font-semibold py-3 px-6 rounded-btn shadow-md hover:shadow-lg transform active:scale-[0.98] transition-all duration-150 flex items-center justify-center space-x-2 cursor-pointer mt-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Masuk Aplikasi</span>
+                    </button>
+
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-brand text-white pt-6 pb-6 border-t-4 border-brand-dark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="pt-2 text-center text-xs text-gray-300">
+                <p>© 2026 PAC PSNU PAGARNUSA Kecamatan Kemang. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Fitur Sembunyi/Tampilkan Password Eye
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+
+        // URL Web App Google Apps Script Utama Anda yang Valid
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxuRSraJTx6QRG_uk6jtGPaDIsl8YpZ2jFOpuTVUg_kCtUCUHVSnCY_TPC7VYYqK_hjLQ/exec";
+
+        const form = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Set UI Loading state
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Memverifikasi...</span>`;
+            loginBtn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            const emailVal = document.getElementById('email').value;
+            const passwordVal = document.getElementById('password').value;
+
+            // Membungkus payload login request
+            const loginData = {
+                action: "loginPeserta",
+                email: emailVal,
+                password: passwordVal
+            };
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8' // Standard bypass CORS preflight untuk Apps Script
+                },
+                body: JSON.stringify(loginData)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === "success" || result.valid === true) {
+                    // BERHASIL: Simpan seluruh payload object baris data dari spreadsheet ke localStorage
+                    localStorage.setItem('sesiPeserta', JSON.stringify(result.dataPeserta));
+                    
+                    alert("Login Berhasil! Selamat datang di Panel Ujian.");
+                    // Pindah ke panel utama peserta
+                    window.location.href = "panelpeserta.html";
+                } else {
+                    // Login Salah
+                    alert("Gagal Masuk: " + (result.message || "Email atau Password salah. Silakan periksa kembali data Anda."));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Terjadi gangguan koneksi saat menghubungi server sheet data. Silakan coba lagi.");
+            })
+            .finally(() => {
+                // Kembalikan tombol seperti semula
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i> <span>Masuk Aplikasi</span>`;
+                loginBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+            });
+        });
+    </script>
+</body>
+</html>
