@@ -9,7 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="icon" href="https://lh3.googleusercontent.com/d/1drM76LlU3sdqpwo-Urq7ZULoyORC0UMQ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -84,16 +86,16 @@
             <div class="bg-white rounded-card shadow-sm p-6 border-l-4 border-brand flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold text-brand-dark">Dashboard Ujian Kenaikan Tingkat</h1>
-                    <p class="text-xs text-brand-textGray mt-0.5">Pantau status verifikasi kelengkapan berkas pendaftaran Anda secara berkala.</p>
+                    <p class="text-xs text-brand-textGray mt-0.5">Pantau dan verifikasi data administrasi profil pendaftaran Anda secara berkala.</p>
                 </div>
                 <span class="bg-brand/10 text-brand text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span> Sesi Aktif
+                    <span class="w-2 h-2 rounded-full bg-brand animate-pulse"></span> Sesi Peserta Aktif
                 </span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 
-                <div class="md:col-span-1 space-y-6">
+                <div class="md:col-span-1">
                     <div class="bg-gradient-to-br from-brand-dark to-brand rounded-card shadow-md p-6 text-white text-center relative overflow-hidden">
                         <div class="absolute -right-6 -bottom-6 text-white/5 text-9xl font-bold select-none">PN</div>
                         <img src="https://lh3.googleusercontent.com/d/1drM76LlU3sdqpwo-Urq7ZULoyORC0UMQ" alt="Logo Pagar Nusa" class="w-20 h-20 mx-auto object-contain bg-white rounded-full p-2 mb-4 shadow-inner">
@@ -103,22 +105,9 @@
                             Target Sabuk: <span id="cardSabuk" class="font-bold text-amber-300">...</span>
                         </div>
                     </div>
-
-                    <div class="bg-white rounded-card shadow-sm p-5 border border-gray-100">
-                        <h3 class="text-sm font-bold text-brand-dark mb-3 flex items-center gap-2">
-                            <i class="fa-solid fa-square-check text-brand"></i> Status Berkas
-                        </h3>
-                        <div class="p-3 bg-amber-50 text-amber-800 rounded-lg border border-amber-200/60 text-xs flex items-start gap-2 leading-relaxed">
-                            <i class="fa-solid fa-circle-exclamation mt-0.5 text-sm"></i>
-                            <div>
-                                <p class="font-bold">Dalam Tahap Verifikasi</p>
-                                <p class="text-amber-700/90 mt-0.5">Tim Admin PAC sedang memvalidasi kesesuaian berkas link dokumen Anda.</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
-                <div class="md:col-span-2">
+                <div class="md:col-span-3">
                     <div class="bg-white rounded-card shadow-sm border border-gray-100 overflow-hidden">
                         <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                             <h3 class="text-sm font-bold text-brand-dark flex items-center gap-2">
@@ -132,6 +121,12 @@
                                 <span class="text-gray-400 font-medium">Nama Lengkap</span>
                                 <span id="detailNama" class="sm:col-span-2 font-semibold text-gray-800">...</span>
                             </div>
+                            <div class="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
+    <span class="text-gray-400 font-medium">Status Pendaftaran</span>
+    <span id="detailStatus" class="sm:col-span-2 font-bold uppercase tracking-wide">
+        <span class="px-2 py-1 rounded-md text-[10px] bg-gray-100 text-gray-500">Memuat...</span>
+    </span>
+</div>
                             <div class="py-3.5 grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-4">
                                 <span class="text-gray-400 font-medium">Tempat, Tgl Lahir</span>
                                 <span id="detailTTL" class="sm:col-span-2 text-gray-700">...</span>
@@ -151,7 +146,7 @@
                             <div class="py-4 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 items-center">
                                 <span class="text-gray-400 font-medium">Sertifikat Sebelumnya</span>
                                 <div id="detailSertifikatWrapper" class="sm:col-span-2">
-                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -166,49 +161,101 @@
         <p>© 2026 PAC PSNU PAGARNUSA Kecamatan Kemang. All Rights Reserved.</p>
     </footer>
 
-    <script>
-        // Pemetaan data dari localStorage ke dalam komponen ID halaman HTML
-        document.addEventListener('DOMContentLoaded', () => {
-            if (dataPeserta) {
-                // Terapkan ke bagian navigasi dan kartu singkat
-                document.getElementById('navNama').innerText = dataPeserta.nama || 'Peserta';
-                document.getElementById('cardNama').innerText = truncateText(dataPeserta.nama || 'Nama Peserta', 22);
-                document.getElementById('cardEmail').innerText = dataPeserta.email || '-';
-                document.getElementById('cardSabuk').innerText = dataPeserta.ujian || '-';
+<script>
+    // 1. Helper Function: Truncate Text
+    function truncateText(str, max) {
+        return (str.length > max) ? str.substr(0, max - 1) + '...' : str;
+    }
 
-                // Terapkan ke tabel biodata mendetail
-                document.getElementById('detailNama').innerText = dataPeserta.nama || '-';
-                document.getElementById('detailTTL').innerText = dataPeserta.ttl || '-';
-                document.getElementById('detailWA').innerText = dataPeserta.whatsapp || '-';
-                document.getElementById('detailAngkatan').innerText = dataPeserta.angkatan || '-';
-                document.getElementById('detailAlamat').innerText = dataPeserta.alamat || '-';
+    // 2. Fungsi Popup Status dengan Animasi
+    function tampilkanPopupStatus(status) {
+        let title, text, icon, confirmButtonColor;
+        const s = status.toLowerCase();
 
-                // Render tombol dinamis untuk mengecek keabsahan link G-Drive berkas sertifikat pendaftar
-                const certWrapper = document.getElementById('detailSertifikatWrapper');
-                if (dataPeserta.sertifikatUrl && dataPeserta.sertifikatUrl.trim().startsWith('http')) {
-                    certWrapper.innerHTML = `
-                        <a href="${dataPeserta.sertifikatUrl.trim()}" target="_blank" class="inline-flex items-center gap-1.5 bg-brand text-white text-xs font-semibold px-3 py-2 rounded-btn hover:bg-brand-dark smooth-transition shadow-sm">
-                            <i class="fa-solid fa-file-arrow-down text-sm"></i> Lihat Berkas G-Drive
-                        </a>
-                    `;
-                } else {
-                    certWrapper.innerHTML = `<span class="text-gray-400 text-xs italic"><i class="fa-solid fa-ban mr-1"></i> Tidak mengunggah berkas sertifikat</span>`;
-                }
-            }
-        });
-
-        // Helper membatasi luapan string nama yang terlalu panjang di tata letak kartu
-        function truncateText(str, max) {
-            return (str.length > max) ? str.substr(0, max - 1) + '...' : str;
+        if (s.includes('kualifikasi')) {
+            title = "Hore! Selamat!";
+            text = "Anda dinyatakan Lolos Kualifikasi. Persiapkan diri untuk tahap selanjutnya.";
+            icon = "success";
+            confirmButtonColor = "#056839";
+        } else if (s.includes('diskualifikasi')) {
+            title = "Mohon Maaf 😔";
+            text = "Anda belum lolos kualifikasi kali ini. Tetap sabar dan semangat untuk mencoba kembali di ujian selanjutnya.";
+            icon = "error";
+            confirmButtonColor = "#dc2626";
+        } else {
+            // Default untuk Pending
+            title = "Menunggu Verifikasi ⏳";
+            text = "Data Anda sedang dalam tahap antrean verifikasi oleh Admin. Harap bersabar.";
+            icon = "info";
+            confirmButtonColor = "#d97706";
         }
 
-        // Penanganan Logout Akun
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            if (confirm('Apakah Anda yakin ingin keluar dari halaman panel peserta?')) {
-                localStorage.removeItem('sesiPeserta');
-                window.location.href = 'login.html';
-            }
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            confirmButtonText: 'Tutup',
+            confirmButtonColor: confirmButtonColor,
+            background: '#fff',
+            backdrop: true,
+            showClass: { popup: 'animate__animated animate__fadeInDown' }
         });
-    </script>
+    }
+
+    // 3. Main Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+        if (dataPeserta) {
+            // Pemetaan Biodata Identitas Utama
+            document.getElementById('navNama').innerText = dataPeserta.nama || 'Peserta';
+            document.getElementById('cardNama').innerText = truncateText(dataPeserta.nama || 'Nama Peserta', 22);
+            document.getElementById('cardEmail').innerText = dataPeserta.email || '-';
+            document.getElementById('cardSabuk').innerText = dataPeserta.ujian || '-';
+
+            document.getElementById('detailNama').innerText = dataPeserta.nama || '-';
+            document.getElementById('detailTTL').innerText = dataPeserta.ttl || '-';
+            document.getElementById('detailWA').innerText = dataPeserta.whatsapp || '-';
+            document.getElementById('detailAngkatan').innerText = dataPeserta.angkatan || '-';
+            document.getElementById('detailAlamat').innerText = dataPeserta.alamat || '-';
+
+            // Render Status dengan Warna Dinamis
+            const statusEl = document.getElementById('detailStatus');
+            const statusTeks = (dataPeserta.status || 'Pending').trim(); 
+            let colorClass = 'bg-gray-200 text-gray-700 border border-gray-300';
+            let statusLower = statusTeks.toLowerCase();
+
+            if (statusLower.includes('kualifikasi')) {
+                colorClass = 'bg-green-100 text-green-700 border border-green-200';
+            } else if (statusLower.includes('diskualifikasi')) {
+                colorClass = 'bg-red-100 text-red-700 border border-red-200';
+            } else if (statusLower.includes('pending')) {
+                colorClass = 'bg-gray-200 text-gray-700 border border-gray-300';
+            }
+            
+            // Tampilkan badge status
+            statusEl.innerHTML = `<span class="px-3 py-1 rounded-full text-[11px] font-bold ${colorClass}">${statusTeks.toUpperCase()}</span>`;
+
+            // Render Tombol Berkas
+            const certWrapper = document.getElementById('detailSertifikatWrapper');
+            if (dataPeserta.sertifikatUrl && dataPeserta.sertifikatUrl.trim().startsWith('http')) {
+                certWrapper.innerHTML = `<a href="${dataPeserta.sertifikatUrl.trim()}" target="_blank" class="inline-flex items-center gap-1.5 bg-brand text-white text-xs font-semibold px-3 py-2 rounded-btn hover:bg-brand-dark smooth-transition shadow-sm"><i class="fa-solid fa-file-arrow-down text-sm"></i> Lihat Berkas G-Drive</a>`;
+            } else {
+                certWrapper.innerHTML = `<span class="text-gray-400 text-xs italic"><i class="fa-solid fa-ban mr-1"></i> Sertifikat belum dapat dilihat, Silahkan ikuti proses ujian terlebih dahulu</span>`;
+            }
+
+            // Panggil popup status setelah 1 detik halaman terbuka
+            setTimeout(() => {
+                tampilkanPopupStatus(dataPeserta.status || 'Pending');
+            }, 1000);
+        }
+    });
+
+    // Penanganan Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        if (confirm('Apakah Anda yakin ingin keluar dari halaman panel peserta?')) {
+            localStorage.removeItem('sesiPeserta');
+            window.location.href = 'login.html';
+        }
+    });
+</script>
 </body>
 </html>
