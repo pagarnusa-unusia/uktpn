@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin - Kelola Data Peserta</title>
+  <link rel="icon" href="https://lh3.googleusercontent.com/d/1drM76LlU3sdqpwo-Urq7ZULoyORC0UMQ">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    :root {
+      --brand: #059669; /* Emerald 600 */
+      --brand-dark: #065f46; /* Emerald 800 */
+    }
+    .text-brand { color: var(--brand); }
+    .bg-brand { background-color: var(--brand); }
+    .border-brand { border-color: var(--brand); }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen text-gray-800">
+
+<nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-brand/20 shadow-sm smooth-transition">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="https://lh3.googleusercontent.com/d/1drM76LlU3sdqpwo-Urq7ZULoyORC0UMQ" alt="Logo Pagar Nusa" class="w-10 h-10 object-contain">
+                    <div class="text-brand-dark tracking-tight leading-none">
+                        <span class="block text-[11px] font-bold uppercase tracking-widest text-gray-500">PAC PSNU PAGARNUSA</span>
+                        <span class="block text-sm font-extrabold text-brand">KECAMATAN KEMANG</span>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8 text-[13px] font-semibold text-gray-600">
+                    <a href="index.html" class="hover:text-brand transition-all">Home</a>
+                    <a href="daftar_peserta.html" class="text-brand border-b-2 border-brand pb-1">Pendaftaran</a>
+                </div>
+
+                <button id="mobile-menu-btn" class="md:hidden text-brand text-xl p-2">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-amber-50 p-4 rounded-2xl border border-amber-100 flex justify-between items-center shadow-xs">
+        <div>
+          <p class="text-[10px] uppercase font-bold text-amber-700">Pending</p>
+          <span id="countPending" class="text-2xl font-black text-amber-900">0</span>
+        </div>
+        <i class="fa-solid fa-clock text-amber-300 text-xl"></i>
+      </div>
+      <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 flex justify-between items-center shadow-xs">
+        <div>
+          <p class="text-[10px] uppercase font-bold text-emerald-700">Kualifikasi</p>
+          <span id="countKualifikasi" class="text-2xl font-black text-emerald-900">0</span>
+        </div>
+        <i class="fa-solid fa-check-circle text-emerald-300 text-xl"></i>
+      </div>
+      <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 flex justify-between items-center shadow-xs">
+        <div>
+          <p class="text-[10px] uppercase font-bold text-rose-700">Diskualifikasi</p>
+          <span id="countDiskualifikasi" class="text-2xl font-black text-rose-900">0</span>
+        </div>
+        <i class="fa-solid fa-times-circle text-rose-300 text-xl"></i>
+      </div>
+    </div>
+
+    <div class="bg-white p-4 rounded-2xl shadow-xs border border-gray-100 mb-6 flex flex-col sm:flex-row gap-4 justify-between items-center">
+      <div class="relative w-full sm:w-96">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+          <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        </span>
+        <input type="text" id="searchInput" oninput="filterData()" placeholder="Cari nama, email, atau asal angkatan..." 
+               class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 transition">
+      </div>
+      <div class="text-sm text-gray-500 font-medium bg-gray-100 px-4 py-2 rounded-xl">
+        Total Terdata: <span id="totalCount" class="text-emerald-700 font-bold">0</span> Peserta
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-xs border border-gray-100 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse whitespace-nowrap">
+          <thead>
+            <tr class="bg-gray-50/70 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+              <th class="px-6 py-4">No</th>
+              <th class="px-6 py-4">Nama Peserta</th>
+              <th class="px-6 py-4">Email</th>
+              <th class="px-6 py-4">Kontak / TTL</th>
+              <th class="px-6 py-4">Alamat</th>
+              <th class="px-6 py-4">Angkatan & Ujian</th>
+              <th class="px-6 py-4">Sertifikat</th>
+              <th class="px-6 py-4 text-center">Status</th>
+              <th class="px-6 py-4 text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-gray-100 text-sm">
+            <tr>
+              <td colspan="9" class="text-center py-12 text-gray-400">
+                <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-emerald-600"></i>
+                <p class="text-xs font-medium">Sedang menarik data dari Google Sheets...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div id="editModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl overflow-hidden max-h-[90vh] flex flex-col m-4 transform scale-95 transition-transform duration-300">
+      <div class="bg-emerald-800 px-6 py-4 text-white flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-user-pen text-lg text-emerald-300"></i>
+          <h3 class="font-bold text-base">Perbarui Data Pendaftar</h3>
+        </div>
+        <button onclick="closeModal()" class="text-white/70 hover:text-white text-xl cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <form id="editForm" onsubmit="submitUpdate(event)" class="overflow-y-auto p-6 space-y-4">
+        <input type="hidden" id="editRowNumber">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nama Lengkap</label>
+            <input type="text" id="editNama" required class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Email Aktif</label>
+            <input type="email" id="editEmail" required class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Password Akun</label>
+            <input type="text" id="editPassword" required class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm font-mono focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">No. WhatsApp</label>
+            <input type="text" id="editNoWhatsapp" required class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tempat, Tanggal Lahir</label>
+            <input type="text" id="editTtl" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tautan URL Berkas/Sertifikat</label>
+            <input type="url" id="editFileUrl" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-blue-600 font-mono text-xs focus:outline-emerald-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Angkatan</label>
+            <select id="editAngkatan" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-emerald-600 bg-white">
+              <option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Ujian Sabuk yang Diikuti</label>
+            <select id="editUjian" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-emerald-600 bg-white">
+              <option value="Putih">Putih</option><option value="Kuning">Kuning</option><option value="Hijau">Hijau</option><option value="Ragam">Ragam</option><option value="Merah">Merah</option><option value="Biru">Biru</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Alamat Domisili Lengkap</label>
+          <textarea id="editAlamat" rows="2" class="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-emerald-600"></textarea>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-2">Keputusan Status Kelulusan</label>
+          <div class="grid grid-cols-3 gap-3">
+            <label class="border rounded-xl p-2 flex items-center justify-center gap-2 text-xs font-semibold cursor-pointer bg-white has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50 text-amber-700">
+              <input type="radio" name="statusRadio" value="Pending" id="statusPending" class="accent-amber-600"> Pending
+            </label>
+            <label class="border rounded-xl p-2 flex items-center justify-center gap-2 text-xs font-semibold cursor-pointer bg-white has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50 text-emerald-700">
+              <input type="radio" name="statusRadio" value="Kualifikasi" id="statusKualifikasi" class="accent-emerald-600"> Kualifikasi
+            </label>
+            <label class="border rounded-xl p-2 flex items-center justify-center gap-2 text-xs font-semibold cursor-pointer bg-white has-[:checked]:border-rose-500 has-[:checked]:bg-rose-50 text-rose-700">
+              <input type="radio" name="statusRadio" value="Diskualifikasi" id="statusDiskualifikasi" class="accent-rose-600"> Diskualifikasi
+            </label>
+          </div>
+        </div>
+        <div class="pt-2 flex justify-end gap-3 border-t border-gray-100">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-200 text-gray-600 text-sm font-semibold rounded-xl hover:bg-gray-50 cursor-pointer">Batal</button>
+          <button type="submit" class="px-5 py-2 bg-emerald-800 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl transition cursor-pointer shadow-xs">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 border-t-4 border-brand">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+        <div><h2 class="text-white font-bold text-lg mb-4 flex items-center gap-2"><img src="https://lh3.googleusercontent.com/d/1drM76LlU3sdqpwo-Urq7ZULoyORC0UMQ" class="w-6 h-6"> Pagar Nusa Kemang</h2><p class="text-xs leading-relaxed">Menjaga tradisi, mempererat silaturahmi, dan membentuk generasi muda yang disiplin melalui seni bela diri pencak silat.</p></div>
+      <div class="border-t border-gray-800 pt-8 text-center"><p class="text-[11px] uppercase tracking-widest">© 2026 PAC PSNU PAGARNUSA KEC. KEMANG. ALL RIGHTS RESERVED.</p></div>
+    </div>
+  </footer>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw2ufh31_FFgnuLkt9PIDmyGaAF0liXMMQplMFTlE4cgqeq5hIVCoYsHP054FdcTgW5/exec";
+    let allDataCache = [];
+
+    document.addEventListener("DOMContentLoaded", () => { loadData(); });
+
+    function loadData() {
+      const tbody = document.getElementById("tableBody");
+      fetch(WEB_APP_URL)
+        .then(response => response.json())
+        .then(res => {
+          if (res.status === "success") {
+            allDataCache = res.data;
+            renderTable(allDataCache);
+          }
+        });
+    }
+
+    function renderTable(dataArray) {
+      const tbody = document.getElementById("tableBody");
+      document.getElementById("totalCount").innerText = dataArray.length;
+
+      // Hitung Statistik
+      document.getElementById("countPending").innerText = dataArray.filter(i => i.status === "Pending").length;
+      document.getElementById("countKualifikasi").innerText = dataArray.filter(i => i.status === "Kualifikasi").length;
+      document.getElementById("countDiskualifikasi").innerText = dataArray.filter(i => i.status === "Diskualifikasi").length;
+
+      if (dataArray.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center py-8 text-gray-400 text-xs">Tidak ditemukan data peserta.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = "";
+      dataArray.forEach((row, index) => {
+        let statusBadge = row.status === "Kualifikasi" ? '<span class="px-2.5 py-1 text-xs font-bold rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200">Kualifikasi</span>' : 
+                          row.status === "Diskualifikasi" ? '<span class="px-2.5 py-1 text-xs font-bold rounded-md bg-rose-100 text-rose-800 border border-rose-200">Diskualifikasi</span>' : 
+                          '<span class="px-2.5 py-1 text-xs font-bold rounded-md bg-amber-100 text-amber-800 border border-amber-200">Pending</span>';
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50/80 transition-colors">
+            <td class="px-6 py-4 text-xs font-bold text-gray-400">${index + 1}</td>
+            <td class="px-6 py-4"><div class="font-bold text-gray-900">${row.nama}</div><div class="text-[10px] text-gray-400 font-mono">${row.timestamp}</div></td>
+            <td class="px-6 py-4"><div class="text-xs font-medium text-gray-700">${row.email}</div><div class="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded w-max mt-1 border border-emerald-100 cursor-pointer" onclick="alert('Password: ${row.password}')">🔑 ••••••••</div></td>
+            <td class="px-6 py-4 text-xs"><div class="font-medium text-gray-700 cursor-pointer hover:text-emerald-600" onclick="copyToClipboard('${row.noWhatsapp}')"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i>${row.noWhatsapp}</div><div class="text-gray-400 mt-0.5 text-[10px]">${row.ttl}</div></td>
+            <td class="px-6 py-4 text-xs text-gray-500 max-w-[150px] truncate">${row.alamat || '-'}</td>
+            <td class="px-6 py-4"><div class="text-xs font-semibold text-gray-700">${row.angkatan}</div><div class="text-[10px] text-purple-700 font-medium bg-purple-50 px-1.5 py-0.5 rounded w-max mt-0.5 border border-purple-100">Sabuk ${row.ujian}</div></td>
+            <td class="px-6 py-4 text-center">${row.fileUrl ? `<a href="${row.fileUrl}" target="_blank" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-file-arrow-down"></i></a>` : '-'}</td>
+            <td class="px-6 py-4 text-center">${statusBadge}</td>
+            <td class="px-6 py-4 text-center">
+              <div class="flex items-center justify-center gap-2">
+                <button onclick="openEditModal(${JSON.stringify(row).replace(/"/g, '&quot;')})" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button onclick="deleteRow(${row.rowNumber}, '${row.nama}')" class="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition"><i class="fa-solid fa-trash-can"></i></button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function copyToClipboard(text) { navigator.clipboard.writeText(text).then(() => alert("Nomor berhasil disalin!")); }
+    function filterData() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      renderTable(allDataCache.filter(item => item.nama.toLowerCase().includes(query) || item.email.toLowerCase().includes(query) || item.angkatan.toString().includes(query)));
+    }
+    function openEditModal(rowObj) {
+      document.getElementById("editRowNumber").value = rowObj.rowNumber;
+      document.getElementById("editNama").value = rowObj.nama;
+      document.getElementById("editEmail").value = rowObj.email;
+      document.getElementById("editPassword").value = rowObj.password;
+      document.getElementById("editNoWhatsapp").value = rowObj.noWhatsapp;
+      document.getElementById("editTtl").value = rowObj.ttl;
+      document.getElementById("editAlamat").value = rowObj.alamat;
+      document.getElementById("editFileUrl").value = rowObj.fileUrl;
+      document.getElementById("editAngkatan").value = rowObj.angkatan;
+      document.getElementById("editUjian").value = rowObj.ujian;
+      if (rowObj.status === "Kualifikasi") document.getElementById("statusKualifikasi").checked = true;
+      else if (rowObj.status === "Diskualifikasi") document.getElementById("statusDiskualifikasi").checked = true;
+      else document.getElementById("statusPending").checked = true;
+      const modal = document.getElementById("editModal");
+      modal.classList.remove("hidden");
+      setTimeout(() => { modal.classList.remove("opacity-0"); modal.querySelector('.transform').classList.remove("scale-95"); }, 50);
+    }
+    function closeModal() {
+      const modal = document.getElementById("editModal");
+      modal.classList.add("opacity-0");
+      modal.querySelector('.transform').classList.add("scale-95");
+      setTimeout(() => { modal.classList.add("hidden"); }, 300);
+    }
+    function submitUpdate(e) {
+      e.preventDefault();
+      const queryParams = new URLSearchParams({
+        action: "update", rowNumber: document.getElementById("editRowNumber").value, password: document.getElementById("editPassword").value,
+        email: document.getElementById("editEmail").value, nama: document.getElementById("editNama").value, ttl: document.getElementById("editTtl").value,
+        alamat: document.getElementById("editAlamat").value, noWhatsapp: document.getElementById("editNoWhatsapp").value, angkatan: document.getElementById("editAngkatan").value,
+        ujian: document.getElementById("editUjian").value, fileUrl: document.getElementById("editFileUrl").value, status: document.querySelector('input[name="statusRadio"]:checked').value
+      });
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Menyimpan...`;
+      fetch(`${WEB_APP_URL}?${queryParams.toString()}`, { method: "POST" })
+        .then(res => res.json())
+        .then(res => { if (res.status === "success") { alert(res.message); closeModal(); loadData(); } else { alert("Gagal memperbarui"); } })
+        .finally(() => { submitBtn.disabled = false; submitBtn.innerText = "Simpan Perubahan"; });
+    }
+    function deleteRow(rowNumber, namaPeserta) {
+      if (confirm(`Hapus data ${namaPeserta}?`)) {
+        fetch(`${WEB_APP_URL}?action=delete&rowNumber=${rowNumber}`, { method: "POST" })
+          .then(res => res.json())
+          .then(res => { if (res.status === "success") { alert(res.message); loadData(); } else { alert("Gagal menghapus"); } });
+      }
+    }
+  </script>
+</body>
+</html>
